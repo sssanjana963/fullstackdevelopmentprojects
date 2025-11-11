@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz App</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body { font-family: Arial; text-align: center; background: #fafafa; }
+    .question { margin: 20px; }
+    button { padding: 10px 20px; margin: 10px; }
+  </style>
+</head>
+<body>
+  <h2>🧠 jQuery Quiz App</h2>
+  <div id="quiz"></div>
+  <button id="next">Next</button>
+  <p id="score"></p>
+
+  <script>
+    const quizData = [
+      { q: "Which language is used for styling web pages?", a: "CSS", options: ["HTML", "CSS", "JS"] },
+      { q: "jQuery is a library of?", a: "JavaScript", options: ["Java", "Python", "JavaScript"] },
+      { q: "Which HTML tag is used for JavaScript?", a: "script", options: ["js", "javascript", "script"] }
+    ];
+
+    let current = 0, score = 0;
+
+    function loadQuestion() {
+      const q = quizData[current];
+      $("#quiz").html(`<div class='question'>
+        <h3>${q.q}</h3>
+        ${q.options.map(o => `<input type='radio' name='option' value='${o}'> ${o}<br>`).join("")}
+      </div>`);
+    }
+
+    $(document).ready(function() {
+      loadQuestion();
+      $("#next").click(function() {
+        const selected = $("input[name='option']:checked").val();
+        if (selected === quizData[current].a) score++;
+        current++;
+        if (current < quizData.length) {
+          loadQuestion();
+        } else {
+          $("#quiz").html(`<h3>Quiz Completed!</h3>`);
+          $("#score").text(`Your score: ${score}/${quizData.length}`);
+          $("#next").hide();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

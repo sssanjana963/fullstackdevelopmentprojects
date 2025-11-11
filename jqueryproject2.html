@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Expense Tracker</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body {background-color: rgb(241, 204, 241); font-family: Arial; margin: 40px; text-align: center }
+    table { width: 60%; margin: 20px auto; border-collapse: collapse; }
+    th, td { border: 1px solid #c87f7f; padding: 10px; }
+    th { background: #500c0c; }
+  </style>
+</head>
+<body>
+  <h2>💰 Expense Tracker</h2>
+  <input type="text" id="item" placeholder="Expense Name">
+  <input type="number" id="amount" placeholder="Amount">
+  <button id="add">Add</button>
+  <table>
+    <thead>
+      <tr><th>Item</th><th>Amount</th><th>Delete</th></tr>
+    </thead>
+    <tbody id="list"></tbody>
+  </table>
+
+  <script>
+    $(document).ready(function(){
+      let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+
+      function render(){
+        $("#list").html("");
+        expenses.forEach((e, i) => {
+          $("#list").append(`<tr><td>${e.item}</td><td>${e.amount}</td><td><button class='del' data-id='${i}'>❌</button></td></tr>`);
+        });
+        localStorage.setItem("expenses", JSON.stringify(expenses));
+      }
+
+      $("#add").click(function(){
+        const item = $("#item").val();
+        const amount = $("#amount").val();
+        if(item && amount){
+          expenses.push({item, amount});
+          render();
+          $("#item").val(""); $("#amount").val("");
+        }
+      });
+
+      $(document).on("click", ".del", function(){
+        const id = $(this).data("id");
+        expenses.splice(id, 1);
+        render();
+      });
+
+      render();
+    });
+  </script>
+</body>
+</html>
